@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirmaan Dashboard - Project Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #fff;
+        }
+        
+        .slide {
+            width: 100%;
+            min-height: 100vh;
+            padding: 60px 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            page-break-after: always;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #003c7a, #005bb5, #ffbc00);
+        }
+        
+        /* Slide 1 - Title */
+        .slide-1 {
+            background: linear-gradient(135deg, #003c7a 0%, #001d3d 100%);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #003c7a, #005bb5);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,60,122,0.5);
+        }
+        
+        .main-title {
+            font-size: 72px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, #fff, #ffbc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 28px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+        }
+        
+        .tagline {
+            font-size: 20px;
+            color: #ffbc00;
+            padding: 12px 30px;
+            border: 2px solid #ffbc00;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        
+        /* Slide 2 - Overview */
+        .slide-2 {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+        }
+        
+        .slide-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 50px;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .slide-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, #003c7a, #ffbc00);
+            border-radius: 2px;
+        }
+        
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .overview-card {
+            background: linear-gradient(135deg, rgba(0,60,122,0.2), rgba(0,91,181,0.1));
+            border: 1px solid rgba(0,91,181,0.3);
+            border-radius: 20px;
+            padding: 30px;
+        }
+        
+        .overview-card h3 {
+            font-size: 24px;
+            color: #ffbc00;
+            margin-bottom: 15px;
+        }
+        
+        .overview-card p {
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+        }
+        
+        /* Slide 3 - Tech Stack */
+        .slide-3 {
+            background: linear-gradient(135deg, #001d3d 0%, #003c7a 100%);
+        }
+        
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .tech-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .tech-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .tech-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .tech-card h4 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .tech-card p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        /* Slide 4 - Features */
+        .slide-4 {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, rgba(255,188,0,0.1), rgba(255,149,0,0.05));
+            border: 1px solid rgba(255,188,0,0.3);
+            border-radius: 16px;
+            padding: 25px;
+        }
+        
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffbc00, #ff9500);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .feature-card p {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.5;
+        }
+        
+        /* Slide 5 - Modules */
+        .slide-5 {
+            background: linear-gradient(135deg, #003c7a 0%, #001d3d 100%);
+        }
+        
+        .modules-container {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .module-card {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .module-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .module-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffbc00, #ff9500);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .module-card h3 {
+            font-size: 24px;
+        }
+        
+        .module-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .module-card li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .module-card li:last-child {
+            border-bottom: none;
+        }
+        
+        .module-card li::before {
+            content: '✓';
+            color: #ffbc00;
+            margin-right: 10px;
+        }
+        
+        /* Slide 6 - Database */
+        .slide-6 {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+        }
+        
+        .db-container {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        
+        .db-schema {
+            flex: 1;
+            background: #1e1e3f;
+            border-radius: 16px;
+            padding: 25px;
+            font-family: 'Consolas', monospace;
+        }
+        
+        .db-schema h4 {
+            color: #ffbc00;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .db-schema pre {
+            color: #a0a0ff;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .db-schema .keyword {
+            color: #ff79c6;
+        }
+        
+        .db-schema .type {
+            color: #8be9fd;
+        }
+        
+        /* Slide 7 - Security */
+        .slide-7 {
+            background: linear-gradient(135deg, #001d3d 0%, #003c7a 100%);
+        }
+        
+        .security-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .security-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 30px;
+        }
+        
+        .security-card h4 {
+            font-size: 22px;
+            color: #ffbc00;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .security-card p {
+            font-size: 16px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+        }
+        
+        /* Slide 8 - User Roles */
+        .slide-8 {
+            background: linear-gradient(135deg, #0a0a1a 0%, #1a1a2e 100%);
+        }
+        
+        .roles-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+        }
+        
+        .role-card {
+            flex: 1;
+            max-width: 300px;
+            background: linear-gradient(135deg, rgba(0,60,122,0.3), rgba(0,60,122,0.1));
+            border: 2px solid rgba(0,91,181,0.5);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .role-card.admin {
+            border-color: #ffbc00;
+            background: linear-gradient(135deg, rgba(255,188,0,0.2), rgba(255,188,0,0.05));
+        }
+        
+        .role-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #003c7a, #005bb5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 20px;
+        }
+        
+        .role-card.admin .role-icon {
+            background: linear-gradient(135deg, #ffbc00, #ff9500);
+        }
+        
+        .role-card h4 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .role-card ul {
+            list-style: none;
+            text-align: left;
+            padding: 0;
+        }
+        
+        .role-card li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        /* Slide 9 - Screenshots placeholder */
+        .slide-9 {
+            background: linear-gradient(135deg, #003c7a 0%, #001d3d 100%);
+        }
+        
+        .screenshot-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        
+        .screenshot-card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, #1a1a2e, #0a0a1a);
+            border-radius: 12px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 48px;
+        }
+        
+        .screenshot-card h4 {
+            font-size: 18px;
+            color: #ffbc00;
+        }
+        
+        /* Slide 10 - Thank You */
+        .slide-10 {
+            background: linear-gradient(135deg, #003c7a 0%, #001d3d 100%);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .thank-you {
+            font-size: 72px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #fff, #ffbc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .contact-info {
+            font-size: 24px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+        }
+        
+        .tech-badges {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            color: #ffbc00;
+            border: 1px solid rgba(255,188,0,0.3);
+        }
+        
+        /* Print styles */
+        @media print {
+            .slide {
+                page-break-after: always;
+                height: 100vh;
+            }
+        }
+        
+        .slide-number {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.4);
+        }
+    </style>
+</head>
+<body>
+    <!-- Slide 1: Title Slide -->
+    <div class="slide slide-1">
+        <div class="logo">N</div>
+        <h1 class="main-title">Nirmaan Dashboard</h1>
+        <p class="subtitle">Donation Management System</p>
+        <span class="tagline">Empowering Charitable Organizations</span>
+        <div class="slide-number">1 / 10</div>
+    </div>
+
+    <!-- Slide 2: Project Overview -->
+    <div class="slide slide-2">
+        <h2 class="slide-title">Project Overview</h2>
+        <div class="overview-grid">
+            <div class="overview-card">
+                <h3>🎯 Purpose</h3>
+                <p>A comprehensive donation management dashboard designed for nirmaan.org to track, manage, and analyze charitable donations efficiently.</p>
+            </div>
+            <div class="overview-card">
+                <h3>👥 Target Users</h3>
+                <p>Non-profit administrators, finance teams, and organizational staff who manage donation records and donor relationships.</p>
+            </div>
+            <div class="overview-card">
+                <h3>💡 Key Benefits</h3>
+                <p>Real-time analytics, multi-currency support (INR & USD), automated reporting, and streamlined donation tracking.</p>
+            </div>
+            <div class="overview-card">
+                <h3>🌐 Deployment</h3>
+                <p>Cloud-based web application accessible from any device with responsive design for desktop and mobile users.</p>
+            </div>
+        </div>
+        <div class="slide-number">2 / 10</div>
+    </div>
+
+    <!-- Slide 3: Technology Stack -->
+    <div class="slide slide-3">
+        <h2 class="slide-title">Technology Stack</h2>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <div class="tech-icon">⚛️</div>
+                <h4>Next.js 16</h4>
+                <p>React Framework with App Router</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🎨</div>
+                <h4>Tailwind CSS</h4>
+                <p>Utility-First Styling</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🗄️</div>
+                <h4>MySQL</h4>
+                <p>Relational Database</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🔐</div>
+                <h4>JWT Auth</h4>
+                <p>Secure Authentication</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">📦</div>
+                <h4>Node.js</h4>
+                <p>Server Runtime</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🔄</div>
+                <h4>REST API</h4>
+                <p>API Architecture</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">📱</div>
+                <h4>Responsive</h4>
+                <p>Mobile-First Design</p>
+            </div>
+            <div class="tech-card">
+                <div class="tech-icon">🌙</div>
+                <h4>Dark Mode</h4>
+                <p>Theme Support</p>
+            </div>
+        </div>
+        <div class="slide-number">3 / 10</div>
+    </div>
+
+    <!-- Slide 4: Key Features -->
+    <div class="slide slide-4">
+        <h2 class="slide-title">Key Features</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h4>Real-Time Dashboard</h4>
+                <p>Live statistics with INR & USD totals, donor counts, and transaction fees breakdown.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h4>Payment Management</h4>
+                <p>View, filter, search, and manage all donation payments with detailed records.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h4>Subscription Tracking</h4>
+                <p>Monitor recurring donations and subscriber statistics.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📢</div>
+                <h4>Campaign Analytics</h4>
+                <p>Track donations by campaign/reference with filtering and export capabilities.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📤</div>
+                <h4>Bulk Upload</h4>
+                <p>Import multiple payment records via CSV with validation.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📥</div>
+                <h4>Data Export</h4>
+                <p>Export filtered data to CSV for reporting and analysis.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h4>Advanced Filtering</h4>
+                <p>Filter by cause, status, currency, date range, and reference.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">👁️</div>
+                <h4>Detail View</h4>
+                <p>Comprehensive payment details in slide-out sidebar.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✅</div>
+                <h4>Bulk Selection</h4>
+                <p>Select multiple records for batch export operations.</p>
+            </div>
+        </div>
+        <div class="slide-number">4 / 10</div>
+    </div>
+
+    <!-- Slide 5: Application Modules -->
+    <div class="slide slide-5">
+        <h2 class="slide-title">Application Modules</h2>
+        <div class="modules-container">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">🏠</div>
+                    <h3>Home Dashboard</h3>
+                </div>
+                <ul>
+                    <li>Total donations overview</li>
+                    <li>INR & USD statistics</li>
+                    <li>Transaction fees summary</li>
+                    <li>Donor count metrics</li>
+                    <li>Cause-based filtering</li>
+                </ul>
+            </div>
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">💰</div>
+                    <h3>Payments</h3>
+                </div>
+                <ul>
+                    <li>Payment list with pagination</li>
+                    <li>Multi-filter search</li>
+                    <li>Bulk CSV upload</li>
+                    <li>Export functionality</li>
+                    <li>Payment details sidebar</li>
+                </ul>
+            </div>
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">📅</div>
+                    <h3>Subscriptions</h3>
+                </div>
+                <ul>
+                    <li>Active subscriptions count</li>
+                    <li>Monthly revenue tracking</li>
+                    <li>Subscriber management</li>
+                    <li>Payment history</li>
+                    <li>Status monitoring</li>
+                </ul>
+            </div>
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-icon">📢</div>
+                    <h3>Campaigns</h3>
+                </div>
+                <ul>
+                    <li>Campaign-wise donations</li>
+                    <li>Date range filtering</li>
+                    <li>Checkbox selection</li>
+                    <li>Selective export</li>
+                    <li>Statistics per campaign</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">5 / 10</div>
+    </div>
+
+    <!-- Slide 6: Database Structure -->
+    <div class="slide slide-6">
+        <h2 class="slide-title">Database Structure</h2>
+        <div class="db-container">
+            <div class="db-schema">
+                <h4>📋 Payments Table</h4>
+                <pre>
+<span class="keyword">CREATE TABLE</span> payments (
+  PaymentId <span class="type">INT PRIMARY KEY</span>,
+  ReceiptId <span class="type">VARCHAR(50)</span>,
+  FullName <span class="type">VARCHAR(255)</span>,
+  Email <span class="type">VARCHAR(255)</span>,
+  Mobile <span class="type">VARCHAR(20)</span>,
+  Amount <span class="type">DECIMAL(10,2)</span>,
+  Currency <span class="type">ENUM('INR','USD')</span>,
+  TransactionFee <span class="type">DECIMAL(10,2)</span>,
+  PaymentStatus <span class="type">VARCHAR(20)</span>,
+  PaymentDate <span class="type">DATETIME</span>,
+  PaymentType <span class="type">VARCHAR(50)</span>,
+  Cause <span class="type">VARCHAR(255)</span>,
+  Reference <span class="type">VARCHAR(255)</span>,
+  SubscriptionId <span class="type">VARCHAR(100)</span>,
+  PAN <span class="type">VARCHAR(20)</span>,
+  Address <span class="type">TEXT</span>,
+  Country <span class="type">VARCHAR(100)</span>,
+  ZIP <span class="type">VARCHAR(20)</span>
+);
+                </pre>
+            </div>
+            <div class="db-schema">
+                <h4>👤 Users Table</h4>
+                <pre>
+<span class="keyword">CREATE TABLE</span> users (
+  UserId <span class="type">INT PRIMARY KEY</span>,
+  FullName <span class="type">VARCHAR(255)</span>,
+  Email <span class="type">VARCHAR(255) UNIQUE</span>,
+  Password <span class="type">VARCHAR(255)</span>,
+  Role <span class="type">ENUM(
+    'super_admin',
+    'admin',
+    'viewer'
+  )</span>,
+  IsActive <span class="type">BOOLEAN</span>,
+  CreatedAt <span class="type">DATETIME</span>,
+  LastLogin <span class="type">DATETIME</span>
+);
+                </pre>
+            </div>
+        </div>
+        <div class="slide-number">6 / 10</div>
+    </div>
+
+    <!-- Slide 7: Security Features -->
+    <div class="slide slide-7">
+        <h2 class="slide-title">Security Features</h2>
+        <div class="security-grid">
+            <div class="security-card">
+                <h4>🔐 JWT Authentication</h4>
+                <p>Secure token-based authentication with HTTP-only cookies. Tokens expire after 7 days for enhanced security.</p>
+            </div>
+            <div class="security-card">
+                <h4>🔑 Password Hashing</h4>
+                <p>Bcrypt encryption with salt rounds for secure password storage. Passwords are never stored in plain text.</p>
+            </div>
+            <div class="security-card">
+                <h4>🛡️ Role-Based Access</h4>
+                <p>Three-tier permission system (Super Admin, Admin, Viewer) controlling access to sensitive operations.</p>
+            </div>
+            <div class="security-card">
+                <h4>🚫 Protected Routes</h4>
+                <p>Client and server-side route protection. Unauthorized users are redirected to login page.</p>
+            </div>
+        </div>
+        <div class="slide-number">7 / 10</div>
+    </div>
+
+    <!-- Slide 8: User Roles -->
+    <div class="slide slide-8">
+        <h2 class="slide-title">User Roles & Permissions</h2>
+        <div class="roles-container">
+            <div class="role-card admin">
+                <div class="role-icon">👑</div>
+                <h4>Super Admin</h4>
+                <ul>
+                    <li>✓ Full system access</li>
+                    <li>✓ User management</li>
+                    <li>✓ Create/Edit/Delete payments</li>
+                    <li>✓ Bulk upload</li>
+                    <li>✓ Export data</li>
+                    <li>✓ View all reports</li>
+                </ul>
+            </div>
+            <div class="role-card">
+                <div class="role-icon">🛡️</div>
+                <h4>Admin</h4>
+                <ul>
+                    <li>✓ View all payments</li>
+                    <li>✓ Edit/Delete payments</li>
+                    <li>✓ Bulk upload</li>
+                    <li>✓ Export data</li>
+                    <li>✓ View reports</li>
+                    <li>✗ No user management</li>
+                </ul>
+            </div>
+            <div class="role-card">
+                <div class="role-icon">👁️</div>
+                <h4>Viewer</h4>
+                <ul>
+                    <li>✓ View payments</li>
+                    <li>✓ View reports</li>
+                    <li>✓ Search & filter</li>
+                    <li>✗ No edit access</li>
+                    <li>✗ No delete access</li>
+                    <li>✗ No bulk operations</li>
+                </ul>
+            </div>
+        </div>
+        <div class="slide-number">8 / 10</div>
+    </div>
+
+    <!-- Slide 9: UI Screenshots -->
+    <div class="slide slide-9">
+        <h2 class="slide-title">User Interface</h2>
+        <div class="screenshot-grid">
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder">🏠</div>
+                <h4>Home Dashboard</h4>
+            </div>
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder">💳</div>
+                <h4>Payments View</h4>
+            </div>
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder">📅</div>
+                <h4>Subscriptions</h4>
+            </div>
+            <div class="screenshot-card">
+                <div class="screenshot-placeholder">📢</div>
+                <h4>Campaigns</h4>
+            </div>
+        </div>
+        <div class="slide-number">9 / 10</div>
+    </div>
+
+    <!-- Slide 10: Thank You -->
+    <div class="slide slide-10">
+        <h1 class="thank-you">Thank You!</h1>
+        <p class="contact-info">Nirmaan Dashboard - Donation Management System</p>
+        <div class="tech-badges">
+            <span class="badge">Next.js 16</span>
+            <span class="badge">React</span>
+            <span class="badge">Tailwind CSS</span>
+            <span class="badge">MySQL</span>
+            <span class="badge">JWT Auth</span>
+            <span class="badge">REST API</span>
+        </div>
+        <div class="slide-number">10 / 10</div>
+    </div>
+</body>
+</html>
