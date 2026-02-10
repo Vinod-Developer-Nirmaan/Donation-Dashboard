@@ -172,105 +172,261 @@ const DetailItem = ({ label, value, highlight, status }) => {
   );
 };
 
-// Bulk Upload Modal Component
+// Bulk Upload Modal Component - Slide-in Panel
 const BulkUploadModal = ({ 
   show, 
   onClose, 
   progress, 
   status, 
   results, 
-  errors 
+  errors,
+  selectedFile,
+  setSelectedFile,
+  sendEmail,
+  setSendEmail,
+  saveToDatabase,
+  setSaveToDatabase,
+  bulkDownload,
+  setBulkDownload,
+  onUpload,
+  onDownloadSample 
 }) => {
   if (!show) return null;
 
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" onClick={status !== 'uploading' ? onClose : undefined} />
+      <div 
+        className="fixed inset-0 bg-black/30 z-40 transition-opacity duration-300" 
+        onClick={status !== 'uploading' ? onClose : undefined} 
+      />
       
-      {/* Modal */}
-      <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-[#003c7a] to-[#ffbc00] px-6 py-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-white">Bulk Upload</h2>
-              {status !== 'uploading' && (
-                <button onClick={onClose} className="p-1 hover:bg-white/20 rounded-lg transition">
-                  <X className="w-5 h-5 text-white" />
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Content */}
-          <div className="p-6">
-            {status === 'uploading' && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Loader2 className="w-6 h-6 text-[#003c7a] animate-spin" />
-                  <span className="text-gray-700">Uploading records...</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                  <div 
-                    className="bg-gradient-to-r from-[#003c7a] to-[#ffbc00] h-full transition-all duration-300 ease-out"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-                <p className="text-sm text-gray-500 text-center">{progress}% complete</p>
-              </div>
-            )}
-
-            {status === 'success' && (
-              <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
-                  <CheckCircle className="w-10 h-10 text-emerald-600" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800">Upload Successful!</h3>
-                  <p className="text-gray-600 mt-1">
-                    {results?.inserted || 0} records uploaded successfully
-                  </p>
-                </div>
-                <button
-                  onClick={onClose}
-                  className="w-full py-3 bg-gradient-to-r from-[#003c7a] to-[#005bb5] text-white rounded-xl font-medium hover:shadow-lg transition"
-                >
-                  Done
-                </button>
-              </div>
-            )}
-
-            {status === 'error' && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-red-600">
-                  <AlertCircle className="w-6 h-6" />
-                  <span className="font-medium">Upload Failed</span>
-                </div>
-                {errors && errors.length > 0 && (
-                  <div className="max-h-48 overflow-y-auto bg-red-50 rounded-lg p-3">
-                    {errors.map((error, i) => (
-                      <p key={i} className="text-sm text-red-700 py-1">{error}</p>
-                    ))}
-                  </div>
-                )}
-                <button
-                  onClick={onClose}
-                  className="w-full py-3 bg-gray-600 text-white rounded-xl font-medium hover:bg-gray-700 transition"
-                >
-                  Close
-                </button>
-              </div>
-            )}
-
-            {status === 'validating' && (
-              <div className="flex items-center gap-3">
-                <Loader2 className="w-6 h-6 text-[#003c7a] animate-spin" />
-                <span className="text-gray-700">Validating CSV file...</span>
-              </div>
+      {/* Slide-in Panel from Right */}
+      <div className="fixed right-0 top-0 h-full w-full max-w-xl bg-white shadow-2xl z-50 transform transition-transform duration-300 ease-out flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Bulk Upload</h2>
+            {!status && (
+              <p className="text-gray-500 text-sm mt-1">Select excel file to bulk upload payments data.</p>
             )}
           </div>
+          {status !== 'uploading' && (
+            <button 
+              onClick={onClose} 
+              className="p-2 hover:bg-gray-100 rounded-full transition"
+            >
+              <X className="w-5 h-5 text-gray-500" />
+            </button>
+          )}
         </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {/* Processing States */}
+          {status === 'uploading' && (
+            <div className="space-y-4 py-8">
+              <div className="flex items-center justify-center gap-3">
+                <Loader2 className="w-8 h-8 text-indigo-600 animate-spin" />
+                <span className="text-gray-700 text-lg">Uploading records...</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div 
+                  className="bg-indigo-600 h-full transition-all duration-300 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
+              </div>
+              <p className="text-sm text-gray-500 text-center">{progress}% complete</p>
+            </div>
+          )}
+
+          {status === 'success' && (
+            <div className="text-center space-y-4 py-8">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle className="w-10 h-10 text-emerald-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">Upload Successful!</h3>
+                <p className="text-gray-600 mt-1">
+                  {results?.inserted || 0} records uploaded successfully
+                </p>
+              </div>
+              <button
+                onClick={onClose}
+                className="px-8 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition"
+              >
+                Done
+              </button>
+            </div>
+          )}
+
+          {status === 'error' && (
+            <div className="space-y-4 py-8">
+              <div className="flex items-center gap-3 text-red-600">
+                <AlertCircle className="w-6 h-6" />
+                <span className="font-medium text-lg">Upload Failed</span>
+              </div>
+              {errors && errors.length > 0 && (
+                <div className="max-h-48 overflow-y-auto bg-red-50 rounded-lg p-4">
+                  {errors.map((error, i) => (
+                    <p key={i} className="text-sm text-red-700 py-1">{error}</p>
+                  ))}
+                </div>
+              )}
+              <button
+                onClick={onClose}
+                className="px-8 py-3 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition"
+              >
+                Close
+              </button>
+            </div>
+          )}
+
+          {status === 'validating' && (
+            <div className="flex items-center justify-center gap-3 py-8">
+              <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
+              <span className="text-gray-700">Validating file...</span>
+            </div>
+          )}
+
+          {/* Form View - Shows when no status (idle state) */}
+          {!status && (
+            <div className="space-y-6">
+              {/* Download Sample Section */}
+              <div className="bg-blue-50 rounded-lg p-4">
+                <h3 className="text-blue-700 font-semibold mb-2">Download Sample File</h3>
+                <p className="text-sm text-blue-600 mb-4">
+                  Click download button to download a sample excel file and fill all the details, 
+                  then upload it to generate receipts.
+                </p>
+                <button
+                  onClick={onDownloadSample}
+                  className="inline-flex items-center gap-2 px-4 py-2 border-2 border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition font-medium"
+                >
+                  <Download className="w-4 h-4" />
+                  Download
+                </button>
+              </div>
+
+              {/* File Input - Horizontal Layout */}
+              <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                <label className="text-sm font-medium text-gray-700">
+                  Select Excel File:
+                </label>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="file"
+                    id="bulk-file-input"
+                    accept=".csv,.xlsx,.xls"
+                    onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="bulk-file-input"
+                    className="px-4 py-1.5 border border-gray-300 rounded text-sm cursor-pointer hover:bg-gray-50 transition"
+                  >
+                    Choose File
+                  </label>
+                  <span className="text-sm text-gray-500">
+                    {selectedFile ? selectedFile.name : 'No file chosen'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Send Email Toggle - Horizontal Layout */}
+              <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                <label className="text-sm font-medium text-gray-700">
+                  Send eMail?
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSendEmail(!sendEmail)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      sendEmail ? 'bg-indigo-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
+                        sendEmail ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className="text-sm text-gray-500">Receipts are directly sent to donors</span>
+                </div>
+              </div>
+
+              {/* Save to Database Toggle - Horizontal Layout */}
+              <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                <label className="text-sm font-medium text-gray-700">
+                  Save on Database?
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setSaveToDatabase(!saveToDatabase)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      saveToDatabase ? 'bg-indigo-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
+                        saveToDatabase ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className="text-sm text-gray-500">These donations are shown in payments.</span>
+                </div>
+              </div>
+
+              {/* Bulk Download Toggle - Horizontal Layout */}
+              <div className="flex items-center justify-between py-3">
+                <label className="text-sm font-medium text-gray-700">
+                  Bulk Download?
+                </label>
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setBulkDownload(!bulkDownload)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                      bulkDownload ? 'bg-indigo-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform shadow ${
+                        bulkDownload ? 'translate-x-6' : 'translate-x-1'
+                      }`}
+                    />
+                  </button>
+                  <span className="text-sm text-gray-500">It will download all receipts as zip file.</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer - Only show for form view */}
+        {!status && (
+          <div className="flex justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <button
+              onClick={onClose}
+              className="px-6 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onUpload}
+              disabled={!selectedFile}
+              className={`px-6 py-2.5 rounded-lg transition font-medium ${
+                selectedFile
+                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              Upload
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
@@ -303,6 +459,10 @@ const PaymentsView = React.memo(({ payments: initialPayments, loading: initialLo
   // Bulk Upload State
   const fileInputRef = useRef(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
+  const [sendEmail, setSendEmail] = useState(false);
+  const [saveToDatabase, setSaveToDatabase] = useState(true);
+  const [bulkDownload, setBulkDownload] = useState(false);
+  const [selectedUploadFile, setSelectedUploadFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState('');
   const [uploadResults, setUploadResults] = useState(null);
@@ -480,6 +640,44 @@ const PaymentsView = React.memo(({ payments: initialPayments, loading: initialLo
     }
   }, [fetchFilteredPayments, fetchStats]);
 
+  // State for sending receipt
+  const [sendingReceipt, setSendingReceipt] = useState(null);
+
+  // Send Receipt Handler
+  const handleSendReceipt = useCallback(async (paymentId, currency, email) => {
+    if (!email) {
+      alert('Donor email is not available for this payment.');
+      return;
+    }
+
+    const receiptType = currency === 'USD' ? '501(c)(3)' : '80G';
+    if (!confirm(`Send ${receiptType} receipt to ${email}?`)) {
+      return;
+    }
+
+    setSendingReceipt(paymentId);
+    try {
+      const response = await fetch('/api/send-receipt', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentId })
+      });
+
+      const result = await response.json();
+      
+      if (result.success) {
+        alert(`✅ ${result.receiptType} receipt sent successfully to ${result.email}`);
+      } else {
+        alert(`❌ Failed to send receipt: ${result.message}`);
+      }
+    } catch (error) {
+      console.error('Error sending receipt:', error);
+      alert('Failed to send receipt. Please try again.');
+    } finally {
+      setSendingReceipt(null);
+    }
+  }, []);
+
   const handleExport = useCallback(async () => {
     try {
       // Build query params from current filters
@@ -618,6 +816,93 @@ const PaymentsView = React.memo(({ payments: initialPayments, loading: initialLo
     setUploadProgress(0);
     setUploadErrors([]);
     setUploadResults(null);
+    setSelectedUploadFile(null);
+    setSendEmail(false);
+    setSaveToDatabase(true);
+    setBulkDownload(false);
+  }, []);
+
+  // Handle bulk upload from modal form
+  const handleBulkUpload = useCallback(async () => {
+    if (!selectedUploadFile) return;
+
+    setUploadStatus('validating');
+    setUploadProgress(0);
+    setUploadErrors([]);
+    setUploadResults(null);
+
+    try {
+      const text = await selectedUploadFile.text();
+      const { headers, records } = parseCSV(text);
+
+      if (records.length === 0) {
+        setUploadStatus('error');
+        setUploadErrors(['CSV file is empty or has invalid format']);
+        return;
+      }
+
+      const requiredHeaders = ['FullName', 'Email', 'Amount', 'Currency', 'PaymentDate'];
+      const missingHeaders = requiredHeaders.filter(h => !headers.includes(h));
+      
+      if (missingHeaders.length > 0) {
+        setUploadStatus('error');
+        setUploadErrors([`Missing required columns: ${missingHeaders.join(', ')}`]);
+        return;
+      }
+
+      setUploadStatus('uploading');
+      setUploadProgress(30);
+
+      const response = await fetch('/api/bulk-upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          records,
+          sendEmail,
+          saveToDatabase,
+          bulkDownload
+        })
+      });
+
+      setUploadProgress(80);
+      const result = await response.json();
+      setUploadProgress(100);
+
+      if (result.success) {
+        setUploadStatus('success');
+        setUploadResults(result);
+        if (saveToDatabase) {
+          fetchFilteredPayments();
+          fetchStats();
+        }
+      } else {
+        setUploadStatus('error');
+        setUploadErrors(result.errors || ['Upload failed']);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      setUploadStatus('error');
+      setUploadErrors([error.message || 'Failed to process file']);
+    }
+  }, [selectedUploadFile, sendEmail, saveToDatabase, bulkDownload, parseCSV, fetchFilteredPayments, fetchStats]);
+
+  // Handle sample file download
+  const handleDownloadSample = useCallback(() => {
+    // Create sample CSV content with all database columns
+    const sampleContent = `FullName,FirstName,LastName,Email,Mobile,PaymentType,TransactionId,Currency,Amount,TransactionFee,Cause,Country,Address,ZIP,PAN,PaymentStatus,PaymentDate,Reference
+John Doe,John,Doe,john.doe@example.com,+1234567890,one_time,TXN001,INR,10000.00,250.00,Education,India,123 Main Street Mumbai,400001,ABCDE1234F,completed,2026-01-15,Bank Transfer
+Jane Smith,Jane,Smith,jane.smith@example.com,+1234567891,recurring,TXN002,INR,5000.00,125.00,Healthcare,India,456 Park Avenue Delhi,110001,FGHIJ5678K,completed,2026-01-16,Online
+Rahul Kumar,Rahul,Kumar,rahul.kumar@example.com,+1234567892,one_time,TXN003,INR,25000.00,625.00,General Fund,India,789 Lake Road Bangalore,560001,KLMNO9012P,completed,2026-01-17,Cheque`;
+    
+    const blob = new Blob([sampleContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sample_bulk_upload.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }, []);
 
   return (
@@ -638,11 +923,11 @@ const PaymentsView = React.memo(({ payments: initialPayments, loading: initialLo
             onClick={handleExport}
             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#003c7a] to-[#005bb5] text-white text-sm rounded-lg hover:shadow-lg transition-all duration-200"
           >
-            <Download className="w-4 h-4" />
+            <Upload className="w-4 h-4" />
             <span className="hidden sm:inline">Export</span>
           </button>
           <button 
-            onClick={() => fileInputRef.current?.click()}
+            onClick={() => setShowUploadModal(true)}
             className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-3 sm:px-4 py-2 bg-gradient-to-r from-[#ff9500] to-[#ff9500] text-white text-sm rounded-lg hover:shadow-lg transition-all duration-200"
           >
             <Upload className="w-4 h-4" />
@@ -721,10 +1006,16 @@ const PaymentsView = React.memo(({ payments: initialPayments, loading: initialLo
                   </div>
                   <div className="flex items-center justify-end gap-2 mt-3 pt-3 border-t border-gray-100">
                     <button 
-                      className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
-                      title="Send Email"
+                      onClick={() => handleSendReceipt(payment.PaymentId, payment.Currency, payment.Email)}
+                      disabled={sendingReceipt === payment.PaymentId}
+                      className="p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors disabled:opacity-50"
+                      title={`Send ${payment.Currency === 'USD' ? '501(c)(3)' : '80G'} Receipt`}
                     >
-                      <Mail className="w-4 h-4" />
+                      {sendingReceipt === payment.PaymentId ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Mail className="w-4 h-4" />
+                      )}
                     </button>
                     <button 
                       onClick={() => handleViewDetails(payment.PaymentId)}
@@ -806,10 +1097,16 @@ const PaymentsView = React.memo(({ payments: initialPayments, loading: initialLo
                       <td className="px-4 lg:px-6 py-4">
                         <div className="flex items-center gap-1 lg:gap-2">
                           <button 
-                            className="p-1.5 lg:p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors"
-                            title="Send Email"
+                            onClick={() => handleSendReceipt(payment.PaymentId, payment.Currency, payment.Email)}
+                            disabled={sendingReceipt === payment.PaymentId}
+                            className="p-1.5 lg:p-2 text-yellow-600 hover:bg-yellow-50 rounded-lg transition-colors disabled:opacity-50"
+                            title={`Send ${payment.Currency === 'USD' ? '501(c)(3)' : '80G'} Receipt`}
                           >
-                            <Mail className="w-4 h-4" />
+                            {sendingReceipt === payment.PaymentId ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Mail className="w-4 h-4" />
+                            )}
                           </button>
                           <button 
                             onClick={() => handleViewDetails(payment.PaymentId)}
@@ -875,6 +1172,16 @@ const PaymentsView = React.memo(({ payments: initialPayments, loading: initialLo
         status={uploadStatus}
         results={uploadResults}
         errors={uploadErrors}
+        selectedFile={selectedUploadFile}
+        setSelectedFile={setSelectedUploadFile}
+        sendEmail={sendEmail}
+        setSendEmail={setSendEmail}
+        saveToDatabase={saveToDatabase}
+        setSaveToDatabase={setSaveToDatabase}
+        bulkDownload={bulkDownload}
+        setBulkDownload={setBulkDownload}
+        onUpload={handleBulkUpload}
+        onDownloadSample={handleDownloadSample}
       />
     </div>
   );

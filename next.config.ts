@@ -18,6 +18,9 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['lucide-react'],
   },
   
+  // Empty turbopack config to allow build with existing webpack config
+  turbopack: {},
+  
   // Faster builds
   webpack: (config, { dev, isServer }) => {
     if (dev && !isServer) {

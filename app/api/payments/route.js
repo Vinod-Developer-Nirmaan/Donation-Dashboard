@@ -101,3 +101,99 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Failed to fetch payments' }, { status: 500 });
   }
 }
+
+// Generate unique Receipt ID
+function generateReceiptId() {
+  const timestamp = Date.now().toString(36).toUpperCase();
+  const random = Math.random().toString(36).substring(2, 8).toUpperCase();
+  return `RCP-${timestamp}-${random}`;
+}
+
+// POST - Add a single donation
+export async function POST(request) {
+  try {
+    const data = await request.json();
+
+    // Validate required fields
+    const requiredFields = ['FullName', 'Email', 'Amount', 'Currency', 'PaymentDate'];
+    const missingFields = requiredFields.filter(field => !data[field]);
+    
+    if (missingFields.length > 0) {
+      return NextResponse.json({
+        success: false,
+        error: `Missing required fields: ${missingFields.join(', ')}`
+      }, { status: 400 });
+    }
+
+    // Validate email format
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.Email)) {
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid email format'
+      }, { status: 400 });
+    }
+
+    // Validate amount
+    if (isNaN(parseFloat(data.Amount)) || parseFloat(data.Amount) <= 0) {
+      return NextResponse.json({
+        success: false,
+        error: 'Amount must be a positive number'
+      }, { status: 400 });
+    }
+
+    // Validate currency
+    if (!['USD', 'INR'].includes(data.Currency.toUpperCase())) {
+      return NextResponse.json({
+        success: false,
+        error: 'Currency must be USD or INR'
+      }, { status: 400 });
+    }
+
+    // Generate Receipt ID
+    const receiptId = generateReceiptId();
+
+    // Insert into database
+    const [result] = await pool.query(
+      `INSERT INTO payments (
+        ReceiptId, FullName, FirstName, LastName, Email, Mobile, 
+        PaymentType, TransactionId, Currency, Amount, TransactionFee, 
+        Cause, Country, Address, ZIP, PAN, PaymentStatus, PaymentDate, Reference
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        receiptId,
+        data.FullName || '',
+        data.FirstName || '',
+        data.LastName || '',
+        data.Email || '',
+        data.Mobile || '',
+        data.PaymentType || 'one_time',
+        data.TransactionId || '',
+        (data.Currency || 'INR').toUpperCase(),
+        parseFloat(data.Amount) || 0,
+        parseFloat(data.TransactionFee) || 0,
+        data.Cause || 'General Fund',
+        data.Country || '',
+        data.Address || '',
+        data.ZIP || '',
+        data.PAN || '',
+        data.PaymentStatus || 'completed',
+        data.PaymentDate ? new Date(data.PaymentDate) : new Date(),
+        data.Reference || ''
+      ]
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: 'Donation added successfully',
+      receiptId: receiptId,
+      paymentId: result.insertId
+    });
+
+  } catch (error) {
+    console.error('Error adding donation:', error);
+    return NextResponse.json({
+      success: false,
+      error: error.message || 'Failed to add donation'
+    }, { status: 500 });
+  }
+}

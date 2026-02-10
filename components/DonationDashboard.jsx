@@ -10,6 +10,7 @@ const HomeView = lazy(() => import('./HomeView'));
 const PaymentsView = lazy(() => import('./PaymentsView'));
 const SubscriptionsView = lazy(() => import('./SubscriptionsView'));
 const CampaignsView = lazy(() => import('./CampaignsView'));
+const AddDonation = lazy(() => import('./AddDonation'));
 
 const LoadingSpinner = () => (
   <div className="flex items-center justify-center h-screen">
@@ -141,6 +142,7 @@ const DonationDashboard = () => {
           )}
           {currentView === 'subscriptions' && <SubscriptionsView />}
           {currentView === 'campaigns' && <CampaignsView />}
+          {currentView === 'add-donation' && <AddDonation />}
         </Suspense>
       </div>
     </div>

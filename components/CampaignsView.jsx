@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { 
-  Megaphone, TrendingUp, Users, DollarSign, IndianRupee,
+  Megaphone, TrendingUp, Users, Upload, DollarSign, IndianRupee,
   Loader2, Eye, Search, ChevronRight, X, User, MapPin, 
   CreditCard, FileText, Calendar, Download
 } from 'lucide-react';
@@ -561,7 +561,7 @@ const CampaignsView = React.memo(() => {
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#003c7a] to-[#005bb5] text-white text-sm rounded-lg hover:shadow-lg transition-all"
                 title={selectedDonations.size > 0 ? `Export ${selectedDonations.size} selected` : 'Export all'}
               >
-                <Download className="w-4 h-4" />
+                <Upload className="w-4 h-4" />
                 <span className="hidden sm:inline">{selectedDonations.size > 0 ? `Export (${selectedDonations.size})` : 'Export'}</span>
               </button>
               <div className="relative flex-1 sm:w-64">
@@ -660,7 +660,7 @@ const CampaignsView = React.memo(() => {
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Donor</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Amount</th>
-                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Campaign</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Reference</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Date</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Status</th>
                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Receipt</th>

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Home, CreditCard, Calendar, Users, Shield, X, HelpCircle, HelpCircleIcon, HelpingHand } from 'lucide-react';
+import { Home, CreditCard, Calendar, Users, Shield, X, HelpCircle, HelpCircleIcon, HelpingHand, PlusCircle } from 'lucide-react';
 import { useAuth } from '@/app/context/AuthContext';
 
 const Sidebar = React.memo(({ currentView, setCurrentView, sidebarOpen, setSidebarOpen }) => {
@@ -23,6 +23,7 @@ const Sidebar = React.memo(({ currentView, setCurrentView, sidebarOpen, setSideb
       setSidebarOpen?.(false);
     }
   };
+
   
   return (
     <>
@@ -39,12 +40,9 @@ const Sidebar = React.memo(({ currentView, setCurrentView, sidebarOpen, setSideb
         sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 lg:w-0'
       } fixed lg:relative inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-900 shadow-lg transition-all duration-300 overflow-hidden border-r border-gray-200 dark:border-gray-700`}>
         <div className="p-6">
-          <div className="flex items-center justify-between mb-8">
+          <div className="shadow flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-[#003c7a] to-[#005bb5] text-white font-bold text-xl px-4 py-2 rounded-lg">
-                N
-              </div>
-              <span className="font-bold text-xl text-gray-800 dark:text-gray-100">nirmaan.org</span>
+              <img src="https://nirmaan.org/assets/img/nirmaan-logo.png" alt="" />
             </div>
             {/* Mobile close button */}
             <button 
@@ -82,6 +80,15 @@ const Sidebar = React.memo(({ currentView, setCurrentView, sidebarOpen, setSideb
           >
             <HelpingHand className="w-5 h-5" />
             <span className="font-medium">Campaigns</span>
+          </button>
+          <button
+            onClick={() => handleNavClick('add-donation')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
+              currentView === 'add-donation' ? 'bg-[#003c7a]/10 text-[#003c7a] dark:bg-[#003c7a]/20 dark:text-[#5ba3d9]' : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
+            }`}
+          >
+            <PlusCircle className="w-5 h-5" />
+            <span className="font-medium">Add Donation</span>
           </button>
           <button
             onClick={() => handleNavClick('subscriptions')}
