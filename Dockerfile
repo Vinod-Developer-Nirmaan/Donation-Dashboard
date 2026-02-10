@@ -20,7 +20,7 @@ COPY . .
 
 # Set environment variables for build
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 # Build the application
 RUN npm run build
@@ -29,7 +29,7 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create non-root user for security
@@ -59,7 +59,7 @@ COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/components/templates ./components/templates
 COPY --from=builder /app/receipts ./receipts
 
-# Set correct permissions
+# Set correct permissions for the application
 RUN chown -R nextjs:nodejs /app
 
 USER nextjs
